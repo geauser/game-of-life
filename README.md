@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-git clone git@github.com:geauser/gameoflife.git
+git clone https://github.com/geauser/gameoflife.git
 cd gameoflife && yarn install
 ```
 
