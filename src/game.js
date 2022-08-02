@@ -12,7 +12,7 @@ class Game {
     this.rows = 0;
 
     // 2px size for the cell
-    this.cellSize = 4;
+    this.cellSize = 6;
     this.aliveCellsTotal = 0;
 
     this.runLife      = false;
@@ -128,7 +128,26 @@ class Game {
       const { x, y } = event;
       this.toggleCell(x, y);
     });
+
+    const mouseMoveHandler = (event) => {
+      event.stopPropagation();
+      const { x, y } = event;
+      this.toggleCell(x, y);
+    }
+
     document.addEventListener('keypress', this.shortcutHandler.bind(this));
+    document.addEventListener('keydown', (event) => {
+
+      if (event.key === 'd') {
+        document.onmousemove = mouseMoveHandler;
+      }
+
+    });
+    document.addEventListener('keyup', (event) => {
+      if (event.key === 'd') {
+        document.onmousemove = null;
+      }
+    })
   }
 
   /**
@@ -245,13 +264,11 @@ class Game {
         that.privateState.isPaused = val;
 
         if (val) {
-          console.log('here 1');
-          that.dom.currentRunningState.classList.add('is-paused');
-          that.dom.currentRunningState.classList.remove('is-playing');
+          that.dom.runningState.classList.add('is-paused');
+          that.dom.runningState.classList.remove('is-playing');
         } else {
-          console.log('here 2');
-          that.dom.currentRunningState.classList.remove('is-paused');
-          that.dom.currentRunningState.classList.add('is-playing');
+          that.dom.runningState.classList.remove('is-paused');
+          that.dom.runningState.classList.add('is-playing');
         }
 
       }
@@ -267,22 +284,22 @@ class Game {
    */
   shortcutHandler(event) {
 
-    const { keyCode } = event;
-
-    switch (keyCode) {
+    switch (event.key) {
 
       // space bar
-      case 32:
+      case ' ':
         this.toggleSimulation();
         this.state.isPaused = !this.state.isPaused;
         break;
 
-      case 114:
+      // fill the plane
+      case 'f':
         this.resetState();
         this.initializePlaneOfExistence(true);
         break;
 
-      case 99:
+      // reset the plane
+      case 'c':
         this.resetPlaneOfExistence();
         break;
 
